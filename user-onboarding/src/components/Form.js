@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import axios from 'axios';
+import * as yup from 'yup';
 
 import Users from './Users'
 
 
-const FormComp = () => {
+const FormComp = ({values, errors, touched, status }) => {
+    console.log(status);
     const [users, setUsers] = useState([]);
     const handleSubmit = (values, tools) => {
        axios.post('https://reqres.in/api/users_', values)
@@ -27,6 +29,11 @@ const FormComp = () => {
     <Formik
       initialValues={{ name: "", email: "", password: "", terms: false }}
       onSubmit={handleSubmit}
+      validationSchema={yup.object().shape({
+          name: yup.string().required(),
+          email: yup.string().email(),
+          password: yup.string()
+      })}
       render={props => {
         //   console.log(users)
         return (
@@ -41,7 +48,7 @@ const FormComp = () => {
 
             <input type="submit" />
 
-            <Users props={users}/>
+            
           </Form>
         );
       }}
